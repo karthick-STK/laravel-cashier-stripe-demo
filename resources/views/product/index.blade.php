@@ -29,7 +29,7 @@
                                     {{$product->price}}</p>
                                 </div>
                                 <div class="col-xs-12 col-md-8">
-                                <form action="http://localhost/laravel/public/checkout" method="post">
+                                <form action="http://localhost/git/laravel/public/checkout" method="post">
             
             <input type="hidden" name="price" value="{{$product->price}}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
