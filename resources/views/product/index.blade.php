@@ -11,6 +11,12 @@
         </div>
     </div> 
    
+    @if(session()->has('message'))
+    <div class="alert alert-success">
+        {{ session()->get('message') }}
+    </div>
+@endif
+
     <div id="products" class="row view-group">
     @foreach($products as $product)   
                 <div class="item col-xs-4 col-lg-4">

@@ -67,10 +67,12 @@ class CheckoutController extends Controller
     {
         $price = 100*$request->input('price');
         $user = Auth::user();
-        $stripeCharge = $request->user()->charge(
+        $request->user()->charge(
             $price, 'pm_card_us'
-        );
-        return response()->json(['result'=> $stripeCharge, "message" => "Payment Captured Successfully.."]);
+        );       
+        $message = $request->input('price') . ' Amount Captured Successfully..';
+        return redirect()->back()->with('message', $message);
+
     }
 
     /**
