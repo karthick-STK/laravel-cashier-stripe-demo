@@ -1,4 +1,5 @@
 <html>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
     <body>
@@ -6,7 +7,7 @@
     <div class="row">
         <div class="col-lg-12 my-3">
             <div class="pull-right">
-                <h4>Product List</h4>
+                <h4>Add Location Form</h4>
             </div>
         </div>
     </div> 
@@ -17,75 +18,74 @@
     </div>
 @endif
 
-    <div id="products" class="row view-group">
-    @foreach($products as $product)   
-                <div class="item col-xs-4 col-lg-4">
-                    <div class="thumbnail card">
-                        <div class="img-event">
-                            <img class="group list-group-image img-fluid" src=" https://cdn.pixabay.com/photo/2015/04/19/08/33/flower-729512__340.jpg" alt="" />
-                        </div>
-                        <div class="caption card-body">
-                            <h4 class="group card-title inner list-group-item-heading">
-                                {{$product->name}}</h4>
-                            <p class="group inner list-group-item-text">
-                                {{$product->description}}</p>
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <p class="lead">
-                                    {{$product->price}}</p>
-                                </div>
-                                <div class="col-xs-12 col-md-8">
-                                <form action="http://localhost/git/laravel/public/checkout" method="post">
-            
-            <input type="hidden" name="price" value="{{$product->price}}">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button class="btn btn-primary" >Buy Now</button>
-            
-            </form>
+<form method="post" action="/git/laravel/public/products/store" >
+  <!-- 2 column grid layout with text inputs for the first and last names -->
+  @csrf
+  <div class="row mb-4">
+    <div class="col">
+      <div class="form-outline">
+      <label class="form-label" for="form3Example1">First Name</label>
+        <input type="text" id="name" name="fname" class="form-control" />       
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-outline">
+      <label class="form-label" for="form3Example2">Last Name</label>
+        <input type="text" id="lname" name="lname" class="form-control" />        
+      </div>
+    </div>
+  </div>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach                
-                
-            </div>
+  <div class="row mb-4">
+    <div class="col">
+      <div class="form-outline">
+      <label class="form-label" for="form3Example1">address</label>
+        <input type="textarea" id="address" name="address" class="form-control" />       
+      </div>
+    </div>    
+  </div>
 
-
-          
+  <div class="row mb-4">
+    <div class="col">
+      <div class="form-outline">
+      <label class="form-label" for="form3Example1">Latitude</label>
+        <input type="number" id="lat" name="lat" class="form-control" />       
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-outline">
+      <label class="form-label" for="form3Example2">Longitude</label>
+        <input type="number" id="long" name="long" class="form-control" />        
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary btn-block mb-4 enroll">Save</button>
+</form>
+<button type="text" onclick="getLocation()">Try It</button>    
 </div>
-    </body>
- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+   </body>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
+<!--<script src="https://js.stripe.com/v3/"></script> -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" ></script>
 <script>
-    const stripe = Stripe('pk_test_51IO24XIadbaPhcttwRAn0XN2lTAtaaHWwXmkdSyPYPvywIEKGMvS5Z5MInwYrVIzvQpe4vBUhRFIDVYGm1OsUWfD007CKR8slm');
 
-    const elements = stripe.elements();
-    const cardElement = elements.create('card');
+var x = document.getElementById("lat");
+var y = document.getElementById("long");
 
-    cardElement.mount('#card-element');
-
-    const cardHolderName = document.getElementById('card-holder-name');
-const cardButton = document.getElementById('card-button');
-
-cardButton.addEventListener('click', async (e) => {
-    const { paymentMethod, error } = await stripe.createPaymentMethod(
-        'card', cardElement, {
-            billing_details: { name: cardHolderName.value }
-        }
-    );
-
-    if (error) {
-        console.log("error");
-        // Display "error.message" to the user...
-    } else {
-        console.log("succe");
-        // The card has been verified successfully...
-    }
-});
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+function showPosition(position) {
+  x.value = position.coords.latitude;
+  y.value = position.coords.longitude;  
+}
+  
 </script>
 
 </html>

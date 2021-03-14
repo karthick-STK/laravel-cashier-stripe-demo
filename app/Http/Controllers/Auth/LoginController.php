@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Product;
 class LoginController extends Controller
 {
     /*
@@ -26,7 +30,33 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/products';
+
+
+    public function login(Request $request)
+    {
+        // Check validation
+        $this->validate($request, [
+            'mobile' => 'required|regex:/[0-9]{10}/|digits:10',            
+        ]);
+ 
+        // Get user record
+        $user = User::where('mobile', $request->get('mobile','password'))->first();
+
+        // Check Condition Mobile No. Found or Not
+        if($request->get('mobile') != $user->mobile) {
+            \Session::put('errors', 'Your mobile number not match in our system..!!');
+            return back();
+        } else{
+            if (Hash::check('passwordToCheck', $user->password)) {
+                // Success
+                return redirect('/products');
+            }else{
+                return back();
+            }
+                      
+        }             
+    }
+  //  protected $redirectTo = '/products';
 
     /**
      * Create a new controller instance.

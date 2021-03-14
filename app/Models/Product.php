@@ -9,7 +9,14 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $table = 'demogeo';
+    
+    protected $fillable = ['fname','lname','address','latitude','longitude'];
 
     protected $guarded = ['id'];
+
+    
+
+    
+
 }

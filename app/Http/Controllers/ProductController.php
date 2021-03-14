@@ -36,9 +36,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Product;
+        $data->fname = $request->fname;
+        $data->lname = $request->lname;
+        $data->address = $request->address;
+        $data->latitude = $request->lat;
+        $data->longitude = $request->long;                
+
+        if($data->save()){
+            //return redirect('/products');
+            return redirect('/products/address/map');
+        }else{
+            return back();
+        }
     }
 
+    public function map()
+    {
+        $locations = Product::get();
+      //  return 'dgdfg';
+        return view('product.map',['locations' => $locations]);
+    }
     /**
      * Display the specified resource.
      *
